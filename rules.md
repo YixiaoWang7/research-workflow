@@ -43,7 +43,8 @@ reference.
 | --- | --- | --- |
 | `runs/` | Trained models, one folder per training run; `runs/selected/` holds read-only copies that other work depends on | No. Never by hand. |
 | `data/` | Datasets and recordings | No. Never by hand. |
-| `outputs/` | Results to look at: evaluations, videos, previews, analyses | Yes: each can be rebuilt |
+| `results/` | Sealed results: read-only copies of finished experiments, the tables, videos and evidence a paper cites | No. Never by code or hand. |
+| `outputs/` | Work in progress: one folder per experiment (`<name>-<id>/`), and `scratch/` for everything else | Only through the cleanup command: scratch a week after it ended, an experiment once sealed or discarded |
 | `.work/` in any job folder | Logs, live status, scratch, local tracking files | Yes, once the job finished |
 
 - **Models and datasets live only under `runs/` or `data/`,** never only in `outputs/`, `.work/`,
@@ -52,13 +53,20 @@ reference.
   the checkpoint and the files beside it, and write to their own folder under `outputs/`. Work
   that depends on a checkpoint uses a read-only copy in `runs/selected/`.
 - **Everything disposable goes into `.work/`.**
+- **Cite it? Register it.** Work that may be cited belongs to a named experiment, registered
+  before its jobs start; its jobs live together in `outputs/<name>-<id>/`, whatever days they ran
+  on. Anything else is scratch. An experiment ends sealed into `results/<name>-<id>/` (tables,
+  videos, raw evidence, a manifest and `SHA256SUMS`, read-only) or discarded; its record in
+  `docs/experiments/` carries the same id.
 - **Every job folder explains itself:** a generated `README.md` says what it is, its state and what
   may be deleted, and a record (`job.json` or `command.json`) says how it was made.
 - **Checkpoints:** keep the newest five, the best and the last; name the best and the last
   `best.pt` and `last.pt`.
-- **Delete through a cleanup command** that lists before it deletes, never follows symlinks and
-  never touches `runs/` or `data/`. Never `rm -rf` generated folders by hand.
-- Never commit `runs/`, `data/`, `outputs/`, checkpoints, logs or tracking caches.
+- **Delete through a cleanup command** that lists before it deletes, never follows symlinks,
+  never touches `runs/`, `data/` or `results/`, never lists what the project's documents name, and
+  removes an experiment only once its sealed result verifies. Never `rm -rf` generated folders by
+  hand.
+- Never commit `runs/`, `data/`, `outputs/`, `results/`, checkpoints, logs or tracking caches.
 
 ## 4. Long jobs
 
